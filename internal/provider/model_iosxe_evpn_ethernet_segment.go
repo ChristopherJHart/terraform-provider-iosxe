@@ -119,7 +119,7 @@ func (data EVPNEthernetSegment) toBody(ctx context.Context) string {
 				body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"identifier.type"+"."+strconv.Itoa(index)+"."+"hex-string", item.HexString.ValueString())
 			}
 			if !item.SystemMac.IsNull() && !item.SystemMac.IsUnknown() {
-				body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"identifier.type"+"."+strconv.Itoa(index)+"."+"system-mac", item.SystemMac.ValueString())
+				body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"identifier.type"+"."+strconv.Itoa(index)+"."+"system-mac", helpers.MacAddressToDotted(item.SystemMac.ValueString()))
 			}
 		}
 	}

@@ -132,9 +132,6 @@ func (r *EVPNEthernetSegmentResource) Schema(ctx context.Context, req resource.S
 						"system_mac": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("System MAC address for generating the ESI value").String,
 							Optional:            true,
-							Validators: []validator.String{
-								stringvalidator.RegexMatches(regexp.MustCompile(`[0-9a-fA-F]+\.[0-9a-fA-F]+\.[0-9a-fA-F]+`), ""),
-							},
 						},
 					},
 				},

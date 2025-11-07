@@ -36,3 +36,4 @@ attributes:
       - yang_name: esi-type-choice/system-mac/system-mac
         xpath: system-mac
         example: 0011.2233.4455
+        normalization_filter: MacAddressToDotted
