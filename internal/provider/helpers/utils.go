@@ -18,6 +18,8 @@
 package helpers
 
 import (
+	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
@@ -107,4 +109,53 @@ func RemoveEmptyStrings(s []string) []string {
 		}
 	}
 	return r
+}
+
+// cleanMacAddress removes common delimiters from MAC address and validates format
+func cleanMacAddress(mac string) string {
+	// Remove common delimiters: colons, dashes, dots
+	cleaned := strings.ReplaceAll(mac, ":", "")
+	cleaned = strings.ReplaceAll(cleaned, "-", "")
+	cleaned = strings.ReplaceAll(cleaned, ".", "")
+	cleaned = strings.ToLower(cleaned)
+
+	// Validate that cleaned MAC is exactly 12 hex characters
+	matched, _ := regexp.MatchString("^[0-9a-f]{12}$", cleaned)
+	if !matched {
+		panic(fmt.Errorf("invalid MAC address format: %s (must be 12 hexadecimal characters after removing delimiters)", mac))
+	}
+
+	return cleaned
+}
+
+// MacAddressToDotted converts MAC address to xxxx.xxxx.xxxx format (Cisco dotted notation)
+// Accepts formats: 00:11:22:33:44:55, 00-11-22-33-44-55, 0011.2233.4455
+// Returns: 0011.2233.4455
+func MacAddressToDotted(mac string) string {
+	cleaned := cleanMacAddress(mac)
+	return fmt.Sprintf("%s.%s.%s", cleaned[0:4], cleaned[4:8], cleaned[8:12])
+}
+
+// MacAddressToColon converts MAC address to xx:xx:xx:xx:xx:xx format (IEEE 802 standard)
+// Accepts formats: 00:11:22:33:44:55, 00-11-22-33-44-55, 0011.2233.4455
+// Returns: 00:11:22:33:44:55
+func MacAddressToColon(mac string) string {
+	cleaned := cleanMacAddress(mac)
+	parts := make([]string, 6)
+	for i := 0; i < 6; i++ {
+		parts[i] = cleaned[i*2 : i*2+2]
+	}
+	return strings.Join(parts, ":")
+}
+
+// MacAddressToDash converts MAC address to xx-xx-xx-xx-xx-xx format
+// Accepts formats: 00:11:22:33:44:55, 00-11-22-33-44-55, 0011.2233.4455
+// Returns: 00-11-22-33-44-55
+func MacAddressToDash(mac string) string {
+	cleaned := cleanMacAddress(mac)
+	parts := make([]string, 6)
+	for i := 0; i < 6; i++ {
+		parts[i] = cleaned[i*2 : i*2+2]
+	}
+	return strings.Join(parts, "-")
 }

@@ -124,33 +124,34 @@ type YamlConfigAttribute struct {
 	XPath     string `yaml:"xpath"`
 	Type      string `yaml:"type"`
 	// "empty", "presence" or "boolean"
-	TypeYangBool       string                `yaml:"type_yang_bool"`
-	Id                 bool                  `yaml:"id"`
-	Reference          bool                  `yaml:"reference"`
-	Mandatory          bool                  `yaml:"mandatory"`
-	Optional           bool                  `yaml:"optional"`
-	WriteOnly          bool                  `yaml:"write_only"`
-	Sensitive          bool                  `yaml:"sensitive"`
-	ExcludeTest        bool                  `yaml:"exclude_test"`
-	ExcludeExample     bool                  `yaml:"exclude_example"`
-	Description        string                `yaml:"description"`
-	Example            string                `yaml:"example"`
-	AllowImportChanges bool                  `yaml:"allow_import_changes"`
-	EnumValues         []string              `yaml:"enum_values"`
-	MinInt             int64                 `yaml:"min_int"`
-	MaxInt             int64                 `yaml:"max_int"`
-	MinFloat           float64               `yaml:"min_float"`
-	MaxFloat           float64               `yaml:"max_float"`
-	StringPatterns     []string              `yaml:"string_patterns"`
-	StringMinLength    int64                 `yaml:"string_min_length"`
-	StringMaxLength    int64                 `yaml:"string_max_length"`
-	DefaultValue       string                `yaml:"default_value"`
-	RequiresReplace    bool                  `yaml:"requires_replace"`
-	NoAugmentConfig    bool                  `yaml:"no_augment_config"`
-	DeleteParent       bool                  `yaml:"delete_parent"`
-	NoDelete           bool                  `yaml:"no_delete"`
-	TestTags           []string              `yaml:"test_tags"`
-	Attributes         []YamlConfigAttribute `yaml:"attributes"`
+	TypeYangBool        string                `yaml:"type_yang_bool"`
+	Id                  bool                  `yaml:"id"`
+	Reference           bool                  `yaml:"reference"`
+	Mandatory           bool                  `yaml:"mandatory"`
+	Optional            bool                  `yaml:"optional"`
+	WriteOnly           bool                  `yaml:"write_only"`
+	Sensitive           bool                  `yaml:"sensitive"`
+	ExcludeTest         bool                  `yaml:"exclude_test"`
+	ExcludeExample      bool                  `yaml:"exclude_example"`
+	Description         string                `yaml:"description"`
+	Example             string                `yaml:"example"`
+	AllowImportChanges  bool                  `yaml:"allow_import_changes"`
+	EnumValues          []string              `yaml:"enum_values"`
+	MinInt              int64                 `yaml:"min_int"`
+	MaxInt              int64                 `yaml:"max_int"`
+	MinFloat            float64               `yaml:"min_float"`
+	MaxFloat            float64               `yaml:"max_float"`
+	StringPatterns      []string              `yaml:"string_patterns"`
+	StringMinLength     int64                 `yaml:"string_min_length"`
+	StringMaxLength     int64                 `yaml:"string_max_length"`
+	DefaultValue        string                `yaml:"default_value"`
+	NormalizationFilter string                `yaml:"normalization_filter"`
+	RequiresReplace     bool                  `yaml:"requires_replace"`
+	NoAugmentConfig     bool                  `yaml:"no_augment_config"`
+	DeleteParent        bool                  `yaml:"delete_parent"`
+	NoDelete            bool                  `yaml:"no_delete"`
+	TestTags            []string              `yaml:"test_tags"`
+	Attributes          []YamlConfigAttribute `yaml:"attributes"`
 }
 
 type YamlTest struct {
