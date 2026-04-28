@@ -9,6 +9,7 @@ description: |-
 
 ## 0.18.0
 
+- Add `match_access_group_index` attribute to `iosxe_class_map` resource and data source for matching on numbered ACLs (`match access-group <1-199 | 1300-2699>`)
 - Add `iosxe_object_group` resource and data source with FQDN (`object-group fqdn`) and network (`object-group network`) object group support, including name, description, nested group references, host entries, network addresses, and regex FQDN patterns
 
 ## 0.17.0
