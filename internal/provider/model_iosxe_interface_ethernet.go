@@ -95,6 +95,12 @@ type InterfaceEthernet struct {
 	Ipv6NdRaSuppressAll                                 types.Bool                                        `tfsdk:"ipv6_nd_ra_suppress_all"`
 	Ipv6AddressAutoconfigDefault                        types.Bool                                        `tfsdk:"ipv6_address_autoconfig_default"`
 	Ipv6AddressDhcp                                     types.Bool                                        `tfsdk:"ipv6_address_dhcp"`
+	Ipv6DhcpServers                                     []InterfaceEthernetIpv6DhcpServers                `tfsdk:"ipv6_dhcp_servers"`
+	Ipv6DhcpClientPd                                    types.String                                      `tfsdk:"ipv6_dhcp_client_pd"`
+	Ipv6DhcpClientPdRapidCommit                         types.Bool                                        `tfsdk:"ipv6_dhcp_client_pd_rapid_commit"`
+	Ipv6DhcpRelayDestinations                           []InterfaceEthernetIpv6DhcpRelayDestinations      `tfsdk:"ipv6_dhcp_relay_destinations"`
+	Ipv6DhcpRelayTrust                                  types.Bool                                        `tfsdk:"ipv6_dhcp_relay_trust"`
+	Ipv6DhcpRelayOptionVpn                              types.Bool                                        `tfsdk:"ipv6_dhcp_relay_option_vpn"`
 	Ipv6LinkLocalAddresses                              []InterfaceEthernetIpv6LinkLocalAddresses         `tfsdk:"ipv6_link_local_addresses"`
 	Ipv6Addresses                                       []InterfaceEthernetIpv6Addresses                  `tfsdk:"ipv6_addresses"`
 	Ipv6FlowMonitors                                    []InterfaceEthernetIpv6FlowMonitors               `tfsdk:"ipv6_flow_monitors"`
@@ -193,6 +199,16 @@ type InterfaceEthernetSourceTemplate struct {
 	TemplateName types.String `tfsdk:"template_name"`
 	Merge        types.Bool   `tfsdk:"merge"`
 }
+type InterfaceEthernetIpv6DhcpServers struct {
+	PoolName    types.String `tfsdk:"pool_name"`
+	AllowHint   types.Bool   `tfsdk:"allow_hint"`
+	RapidCommit types.Bool   `tfsdk:"rapid_commit"`
+	Preference  types.Int64  `tfsdk:"preference"`
+}
+type InterfaceEthernetIpv6DhcpRelayDestinations struct {
+	Address   types.String `tfsdk:"address"`
+	Interface types.List   `tfsdk:"interface"`
+}
 type InterfaceEthernetIpv6LinkLocalAddresses struct {
 	Address   types.String `tfsdk:"address"`
 	LinkLocal types.Bool   `tfsdk:"link_local"`
@@ -279,6 +295,12 @@ type InterfaceEthernetData struct {
 	Ipv6NdRaSuppressAll                                 types.Bool                                            `tfsdk:"ipv6_nd_ra_suppress_all"`
 	Ipv6AddressAutoconfigDefault                        types.Bool                                            `tfsdk:"ipv6_address_autoconfig_default"`
 	Ipv6AddressDhcp                                     types.Bool                                            `tfsdk:"ipv6_address_dhcp"`
+	Ipv6DhcpServers                                     []InterfaceEthernetIpv6DhcpServersData                `tfsdk:"ipv6_dhcp_servers"`
+	Ipv6DhcpClientPd                                    types.String                                          `tfsdk:"ipv6_dhcp_client_pd"`
+	Ipv6DhcpClientPdRapidCommit                         types.Bool                                            `tfsdk:"ipv6_dhcp_client_pd_rapid_commit"`
+	Ipv6DhcpRelayDestinations                           []InterfaceEthernetIpv6DhcpRelayDestinationsData      `tfsdk:"ipv6_dhcp_relay_destinations"`
+	Ipv6DhcpRelayTrust                                  types.Bool                                            `tfsdk:"ipv6_dhcp_relay_trust"`
+	Ipv6DhcpRelayOptionVpn                              types.Bool                                            `tfsdk:"ipv6_dhcp_relay_option_vpn"`
 	Ipv6LinkLocalAddresses                              []InterfaceEthernetIpv6LinkLocalAddressesData         `tfsdk:"ipv6_link_local_addresses"`
 	Ipv6Addresses                                       []InterfaceEthernetIpv6AddressesData                  `tfsdk:"ipv6_addresses"`
 	Ipv6FlowMonitors                                    []InterfaceEthernetIpv6FlowMonitorsData               `tfsdk:"ipv6_flow_monitors"`
@@ -376,6 +398,16 @@ type InterfaceEthernetHelperAddressesData struct {
 type InterfaceEthernetSourceTemplateData struct {
 	TemplateName types.String `tfsdk:"template_name"`
 	Merge        types.Bool   `tfsdk:"merge"`
+}
+type InterfaceEthernetIpv6DhcpServersData struct {
+	PoolName    types.String `tfsdk:"pool_name"`
+	AllowHint   types.Bool   `tfsdk:"allow_hint"`
+	RapidCommit types.Bool   `tfsdk:"rapid_commit"`
+	Preference  types.Int64  `tfsdk:"preference"`
+}
+type InterfaceEthernetIpv6DhcpRelayDestinationsData struct {
+	Address   types.String `tfsdk:"address"`
+	Interface types.List   `tfsdk:"interface"`
 }
 type InterfaceEthernetIpv6LinkLocalAddressesData struct {
 	Address   types.String `tfsdk:"address"`
@@ -631,6 +663,24 @@ func (data InterfaceEthernet) toBody(ctx context.Context, config InterfaceEthern
 	if !data.Ipv6AddressDhcp.IsNull() && !data.Ipv6AddressDhcp.IsUnknown() {
 		if data.Ipv6AddressDhcp.ValueBool() {
 			body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.address.dhcp", map[string]string{})
+		}
+	}
+	if !data.Ipv6DhcpClientPd.IsNull() && !data.Ipv6DhcpClientPd.IsUnknown() {
+		body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.prefix-name", data.Ipv6DhcpClientPd.ValueString())
+	}
+	if !data.Ipv6DhcpClientPdRapidCommit.IsNull() && !data.Ipv6DhcpClientPdRapidCommit.IsUnknown() {
+		if data.Ipv6DhcpClientPdRapidCommit.ValueBool() {
+			body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.rapid-commit", map[string]string{})
+		}
+	}
+	if !data.Ipv6DhcpRelayTrust.IsNull() && !data.Ipv6DhcpRelayTrust.IsUnknown() {
+		if data.Ipv6DhcpRelayTrust.ValueBool() {
+			body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.trust", map[string]string{})
+		}
+	}
+	if !data.Ipv6DhcpRelayOptionVpn.IsNull() && !data.Ipv6DhcpRelayOptionVpn.IsUnknown() {
+		if data.Ipv6DhcpRelayOptionVpn.ValueBool() {
+			body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.option.vpn", map[string]string{})
 		}
 	}
 	if !data.ArpTimeout.IsNull() && !data.ArpTimeout.IsUnknown() {
@@ -992,6 +1042,40 @@ func (data InterfaceEthernet) toBody(ctx context.Context, config InterfaceEthern
 			}
 		}
 	}
+	if len(data.Ipv6DhcpServers) > 0 {
+		body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:server", []interface{}{})
+		for index, item := range data.Ipv6DhcpServers {
+			if !item.PoolName.IsNull() && !item.PoolName.IsUnknown() {
+				body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:server"+"."+strconv.Itoa(index)+"."+"word", item.PoolName.ValueString())
+			}
+			if !item.AllowHint.IsNull() && !item.AllowHint.IsUnknown() {
+				if item.AllowHint.ValueBool() {
+					body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:server"+"."+strconv.Itoa(index)+"."+"allow-hint", map[string]string{})
+				}
+			}
+			if !item.RapidCommit.IsNull() && !item.RapidCommit.IsUnknown() {
+				if item.RapidCommit.ValueBool() {
+					body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:server"+"."+strconv.Itoa(index)+"."+"rapid-commit", map[string]string{})
+				}
+			}
+			if !item.Preference.IsNull() && !item.Preference.IsUnknown() {
+				body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:server"+"."+strconv.Itoa(index)+"."+"preference", strconv.FormatInt(item.Preference.ValueInt64(), 10))
+			}
+		}
+	}
+	if len(data.Ipv6DhcpRelayDestinations) > 0 {
+		body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.destination.address", []interface{}{})
+		for index, item := range data.Ipv6DhcpRelayDestinations {
+			if !item.Address.IsNull() && !item.Address.IsUnknown() {
+				body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.destination.address"+"."+strconv.Itoa(index)+"."+"ipv6-address", item.Address.ValueString())
+			}
+			if !item.Interface.IsNull() && !item.Interface.IsUnknown() {
+				var values []string
+				item.Interface.ElementsAs(ctx, &values, false)
+				body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.destination.address"+"."+strconv.Itoa(index)+"."+"interface-list", values)
+			}
+		}
+	}
 	if len(data.Ipv6LinkLocalAddresses) > 0 {
 		body, _ = sjson.Set(body, helpers.LastElement(data.getPath())+"."+"ipv6.address.link-local-address", []interface{}{})
 		for index, item := range data.Ipv6LinkLocalAddresses {
@@ -1347,6 +1431,72 @@ func (data InterfaceEthernet) toBodyXML(ctx context.Context, config InterfaceEth
 			body = helpers.SetFromXPath(body, data.getXPath()+"/ipv6/address/dhcp", "")
 		} else {
 			body = helpers.RemoveFromXPath(body, data.getXPath()+"/ipv6/address/dhcp")
+		}
+	}
+	if len(data.Ipv6DhcpServers) > 0 {
+		for _, item := range data.Ipv6DhcpServers {
+			cBody := netconf.Body{}
+			if !item.PoolName.IsNull() && !item.PoolName.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "word", item.PoolName.ValueString())
+			}
+			if !item.AllowHint.IsNull() && !item.AllowHint.IsUnknown() {
+				if item.AllowHint.ValueBool() {
+					cBody = helpers.SetFromXPath(cBody, "allow-hint", "")
+				} else {
+					cBody = helpers.RemoveFromXPath(cBody, "allow-hint")
+				}
+			}
+			if !item.RapidCommit.IsNull() && !item.RapidCommit.IsUnknown() {
+				if item.RapidCommit.ValueBool() {
+					cBody = helpers.SetFromXPath(cBody, "rapid-commit", "")
+				} else {
+					cBody = helpers.RemoveFromXPath(cBody, "rapid-commit")
+				}
+			}
+			if !item.Preference.IsNull() && !item.Preference.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "preference", strconv.FormatInt(item.Preference.ValueInt64(), 10))
+			}
+			body = helpers.SetRawFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server", cBody.Res())
+		}
+	}
+	if !data.Ipv6DhcpClientPd.IsNull() && !data.Ipv6DhcpClientPd.IsUnknown() {
+		body = helpers.SetFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name", data.Ipv6DhcpClientPd.ValueString())
+	}
+	if !data.Ipv6DhcpClientPdRapidCommit.IsNull() && !data.Ipv6DhcpClientPdRapidCommit.IsUnknown() {
+		if data.Ipv6DhcpClientPdRapidCommit.ValueBool() {
+			body = helpers.SetFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit", "")
+		} else {
+			body = helpers.RemoveFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit")
+		}
+	}
+	if len(data.Ipv6DhcpRelayDestinations) > 0 {
+		for _, item := range data.Ipv6DhcpRelayDestinations {
+			cBody := netconf.Body{}
+			if !item.Address.IsNull() && !item.Address.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "ipv6-address", item.Address.ValueString())
+			}
+			if !item.Interface.IsNull() && !item.Interface.IsUnknown() {
+				var values []string
+				item.Interface.ElementsAs(ctx, &values, false)
+				for _, v := range values {
+					cBody = helpers.AppendFromXPath(cBody, "interface-list", v)
+				}
+			}
+			body = helpers.SetRawFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address", cBody.Res())
+		}
+	}
+	if !data.Ipv6DhcpRelayTrust.IsNull() && !data.Ipv6DhcpRelayTrust.IsUnknown() {
+		if data.Ipv6DhcpRelayTrust.ValueBool() {
+			body = helpers.SetFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust", "")
+		} else {
+			body = helpers.RemoveFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust")
+		}
+	}
+	if !data.Ipv6DhcpRelayOptionVpn.IsNull() && !data.Ipv6DhcpRelayOptionVpn.IsUnknown() {
+		if data.Ipv6DhcpRelayOptionVpn.ValueBool() {
+			body = helpers.SetFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn", "")
+		} else {
+			body = helpers.RemoveFromXPath(body, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn")
 		}
 	}
 	if len(data.Ipv6LinkLocalAddresses) > 0 {
@@ -2302,6 +2452,124 @@ func (data *InterfaceEthernet) updateFromBody(ctx context.Context, res gjson.Res
 		}
 	} else {
 		data.Ipv6AddressDhcp = types.BoolNull()
+	}
+	for i := range data.Ipv6DhcpServers {
+		keys := [...]string{"word"}
+		keyValues := [...]string{data.Ipv6DhcpServers[i].PoolName.ValueString()}
+
+		var r gjson.Result
+		res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:server").ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() == keyValues[ik] {
+						found = true
+						continue
+					}
+					found = false
+					break
+				}
+				if found {
+					r = v
+					return false
+				}
+				return true
+			},
+		)
+		if value := r.Get("word"); value.Exists() && !data.Ipv6DhcpServers[i].PoolName.IsNull() {
+			data.Ipv6DhcpServers[i].PoolName = types.StringValue(value.String())
+		} else {
+			data.Ipv6DhcpServers[i].PoolName = types.StringNull()
+		}
+		if value := r.Get("allow-hint"); !data.Ipv6DhcpServers[i].AllowHint.IsNull() {
+			if value.Exists() {
+				data.Ipv6DhcpServers[i].AllowHint = types.BoolValue(true)
+			} else {
+				data.Ipv6DhcpServers[i].AllowHint = types.BoolValue(false)
+			}
+		} else {
+			data.Ipv6DhcpServers[i].AllowHint = types.BoolNull()
+		}
+		if value := r.Get("rapid-commit"); !data.Ipv6DhcpServers[i].RapidCommit.IsNull() {
+			if value.Exists() {
+				data.Ipv6DhcpServers[i].RapidCommit = types.BoolValue(true)
+			} else {
+				data.Ipv6DhcpServers[i].RapidCommit = types.BoolValue(false)
+			}
+		} else {
+			data.Ipv6DhcpServers[i].RapidCommit = types.BoolNull()
+		}
+		if value := r.Get("preference"); value.Exists() && !data.Ipv6DhcpServers[i].Preference.IsNull() {
+			data.Ipv6DhcpServers[i].Preference = types.Int64Value(value.Int())
+		} else {
+			data.Ipv6DhcpServers[i].Preference = types.Int64Null()
+		}
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.prefix-name"); value.Exists() && !data.Ipv6DhcpClientPd.IsNull() {
+		data.Ipv6DhcpClientPd = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpClientPd = types.StringNull()
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.rapid-commit"); !data.Ipv6DhcpClientPdRapidCommit.IsNull() {
+		if value.Exists() {
+			data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(true)
+		} else {
+			data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(false)
+		}
+	} else {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolNull()
+	}
+	for i := range data.Ipv6DhcpRelayDestinations {
+		keys := [...]string{"ipv6-address"}
+		keyValues := [...]string{data.Ipv6DhcpRelayDestinations[i].Address.ValueString()}
+
+		var r gjson.Result
+		res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.destination.address").ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() == keyValues[ik] {
+						found = true
+						continue
+					}
+					found = false
+					break
+				}
+				if found {
+					r = v
+					return false
+				}
+				return true
+			},
+		)
+		if value := r.Get("ipv6-address"); value.Exists() && !data.Ipv6DhcpRelayDestinations[i].Address.IsNull() {
+			data.Ipv6DhcpRelayDestinations[i].Address = types.StringValue(value.String())
+		} else {
+			data.Ipv6DhcpRelayDestinations[i].Address = types.StringNull()
+		}
+		if value := r.Get("interface-list"); value.Exists() && !data.Ipv6DhcpRelayDestinations[i].Interface.IsNull() {
+			data.Ipv6DhcpRelayDestinations[i].Interface = helpers.GetStringList(value.Array())
+		} else {
+			data.Ipv6DhcpRelayDestinations[i].Interface = types.ListNull(types.StringType)
+		}
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.trust"); !data.Ipv6DhcpRelayTrust.IsNull() {
+		if value.Exists() {
+			data.Ipv6DhcpRelayTrust = types.BoolValue(true)
+		} else {
+			data.Ipv6DhcpRelayTrust = types.BoolValue(false)
+		}
+	} else {
+		data.Ipv6DhcpRelayTrust = types.BoolNull()
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.option.vpn"); !data.Ipv6DhcpRelayOptionVpn.IsNull() {
+		if value.Exists() {
+			data.Ipv6DhcpRelayOptionVpn = types.BoolValue(true)
+		} else {
+			data.Ipv6DhcpRelayOptionVpn = types.BoolValue(false)
+		}
+	} else {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolNull()
 	}
 	for i := range data.Ipv6LinkLocalAddresses {
 		keys := [...]string{"address"}
@@ -3596,6 +3864,124 @@ func (data *InterfaceEthernet) updateFromBodyXML(ctx context.Context, res xmldot
 	} else {
 		data.Ipv6AddressDhcp = types.BoolNull()
 	}
+	for i := range data.Ipv6DhcpServers {
+		keys := [...]string{"word"}
+		keyValues := [...]string{data.Ipv6DhcpServers[i].PoolName.ValueString()}
+
+		var r xmldot.Result
+		helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server").ForEach(
+			func(_ int, v xmldot.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() == keyValues[ik] {
+						found = true
+						continue
+					}
+					found = false
+					break
+				}
+				if found {
+					r = v
+					return false
+				}
+				return true
+			},
+		)
+		if value := helpers.GetFromXPath(r, "word"); value.Exists() && !data.Ipv6DhcpServers[i].PoolName.IsNull() {
+			data.Ipv6DhcpServers[i].PoolName = types.StringValue(value.String())
+		} else {
+			data.Ipv6DhcpServers[i].PoolName = types.StringNull()
+		}
+		if value := helpers.GetFromXPath(r, "allow-hint"); !data.Ipv6DhcpServers[i].AllowHint.IsNull() {
+			if value.Exists() {
+				data.Ipv6DhcpServers[i].AllowHint = types.BoolValue(true)
+			} else {
+				data.Ipv6DhcpServers[i].AllowHint = types.BoolValue(false)
+			}
+		} else {
+			data.Ipv6DhcpServers[i].AllowHint = types.BoolNull()
+		}
+		if value := helpers.GetFromXPath(r, "rapid-commit"); !data.Ipv6DhcpServers[i].RapidCommit.IsNull() {
+			if value.Exists() {
+				data.Ipv6DhcpServers[i].RapidCommit = types.BoolValue(true)
+			} else {
+				data.Ipv6DhcpServers[i].RapidCommit = types.BoolValue(false)
+			}
+		} else {
+			data.Ipv6DhcpServers[i].RapidCommit = types.BoolNull()
+		}
+		if value := helpers.GetFromXPath(r, "preference"); value.Exists() && !data.Ipv6DhcpServers[i].Preference.IsNull() {
+			data.Ipv6DhcpServers[i].Preference = types.Int64Value(value.Int())
+		} else {
+			data.Ipv6DhcpServers[i].Preference = types.Int64Null()
+		}
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name"); value.Exists() && !data.Ipv6DhcpClientPd.IsNull() {
+		data.Ipv6DhcpClientPd = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpClientPd = types.StringNull()
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit"); !data.Ipv6DhcpClientPdRapidCommit.IsNull() {
+		if value.Exists() {
+			data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(true)
+		} else {
+			data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(false)
+		}
+	} else {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolNull()
+	}
+	for i := range data.Ipv6DhcpRelayDestinations {
+		keys := [...]string{"ipv6-address"}
+		keyValues := [...]string{data.Ipv6DhcpRelayDestinations[i].Address.ValueString()}
+
+		var r xmldot.Result
+		helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address").ForEach(
+			func(_ int, v xmldot.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() == keyValues[ik] {
+						found = true
+						continue
+					}
+					found = false
+					break
+				}
+				if found {
+					r = v
+					return false
+				}
+				return true
+			},
+		)
+		if value := helpers.GetFromXPath(r, "ipv6-address"); value.Exists() && !data.Ipv6DhcpRelayDestinations[i].Address.IsNull() {
+			data.Ipv6DhcpRelayDestinations[i].Address = types.StringValue(value.String())
+		} else {
+			data.Ipv6DhcpRelayDestinations[i].Address = types.StringNull()
+		}
+		if value := helpers.GetFromXPath(r, "interface-list"); value.Exists() && !data.Ipv6DhcpRelayDestinations[i].Interface.IsNull() {
+			data.Ipv6DhcpRelayDestinations[i].Interface = helpers.GetStringListXML(value.Array())
+		} else {
+			data.Ipv6DhcpRelayDestinations[i].Interface = types.ListNull(types.StringType)
+		}
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust"); !data.Ipv6DhcpRelayTrust.IsNull() {
+		if value.Exists() {
+			data.Ipv6DhcpRelayTrust = types.BoolValue(true)
+		} else {
+			data.Ipv6DhcpRelayTrust = types.BoolValue(false)
+		}
+	} else {
+		data.Ipv6DhcpRelayTrust = types.BoolNull()
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn"); !data.Ipv6DhcpRelayOptionVpn.IsNull() {
+		if value.Exists() {
+			data.Ipv6DhcpRelayOptionVpn = types.BoolValue(true)
+		} else {
+			data.Ipv6DhcpRelayOptionVpn = types.BoolValue(false)
+		}
+	} else {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolNull()
+	}
 	for i := range data.Ipv6LinkLocalAddresses {
 		keys := [...]string{"address"}
 		keyValues := [...]string{data.Ipv6LinkLocalAddresses[i].Address.ValueString()}
@@ -4710,6 +5096,64 @@ func (data *InterfaceEthernet) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Ipv6AddressDhcp = types.BoolValue(false)
 	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:server"); value.Exists() {
+		data.Ipv6DhcpServers = make([]InterfaceEthernetIpv6DhcpServers, 0)
+		value.ForEach(func(k, v gjson.Result) bool {
+			item := InterfaceEthernetIpv6DhcpServers{}
+			if cValue := v.Get("word"); cValue.Exists() {
+				item.PoolName = types.StringValue(cValue.String())
+			}
+			if cValue := v.Get("allow-hint"); cValue.Exists() {
+				item.AllowHint = types.BoolValue(true)
+			} else {
+				item.AllowHint = types.BoolValue(false)
+			}
+			if cValue := v.Get("rapid-commit"); cValue.Exists() {
+				item.RapidCommit = types.BoolValue(true)
+			} else {
+				item.RapidCommit = types.BoolValue(false)
+			}
+			if cValue := v.Get("preference"); cValue.Exists() {
+				item.Preference = types.Int64Value(cValue.Int())
+			}
+			data.Ipv6DhcpServers = append(data.Ipv6DhcpServers, item)
+			return true
+		})
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.prefix-name"); value.Exists() {
+		data.Ipv6DhcpClientPd = types.StringValue(value.String())
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.rapid-commit"); value.Exists() {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(false)
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.destination.address"); value.Exists() {
+		data.Ipv6DhcpRelayDestinations = make([]InterfaceEthernetIpv6DhcpRelayDestinations, 0)
+		value.ForEach(func(k, v gjson.Result) bool {
+			item := InterfaceEthernetIpv6DhcpRelayDestinations{}
+			if cValue := v.Get("ipv6-address"); cValue.Exists() {
+				item.Address = types.StringValue(cValue.String())
+			}
+			if cValue := v.Get("interface-list"); cValue.Exists() {
+				item.Interface = helpers.GetStringList(cValue.Array())
+			} else {
+				item.Interface = types.ListNull(types.StringType)
+			}
+			data.Ipv6DhcpRelayDestinations = append(data.Ipv6DhcpRelayDestinations, item)
+			return true
+		})
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.trust"); value.Exists() {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(false)
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.option.vpn"); value.Exists() {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(false)
+	}
 	if value := res.Get(prefix + "ipv6.address.link-local-address"); value.Exists() {
 		data.Ipv6LinkLocalAddresses = make([]InterfaceEthernetIpv6LinkLocalAddresses, 0)
 		value.ForEach(func(k, v gjson.Result) bool {
@@ -5408,6 +5852,64 @@ func (data *InterfaceEthernetData) fromBody(ctx context.Context, res gjson.Resul
 	} else {
 		data.Ipv6AddressDhcp = types.BoolValue(false)
 	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:server"); value.Exists() {
+		data.Ipv6DhcpServers = make([]InterfaceEthernetIpv6DhcpServersData, 0)
+		value.ForEach(func(k, v gjson.Result) bool {
+			item := InterfaceEthernetIpv6DhcpServersData{}
+			if cValue := v.Get("word"); cValue.Exists() {
+				item.PoolName = types.StringValue(cValue.String())
+			}
+			if cValue := v.Get("allow-hint"); cValue.Exists() {
+				item.AllowHint = types.BoolValue(true)
+			} else {
+				item.AllowHint = types.BoolValue(false)
+			}
+			if cValue := v.Get("rapid-commit"); cValue.Exists() {
+				item.RapidCommit = types.BoolValue(true)
+			} else {
+				item.RapidCommit = types.BoolValue(false)
+			}
+			if cValue := v.Get("preference"); cValue.Exists() {
+				item.Preference = types.Int64Value(cValue.Int())
+			}
+			data.Ipv6DhcpServers = append(data.Ipv6DhcpServers, item)
+			return true
+		})
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.prefix-name"); value.Exists() {
+		data.Ipv6DhcpClientPd = types.StringValue(value.String())
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:client.pd.pd-prefix.rapid-commit"); value.Exists() {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(false)
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.destination.address"); value.Exists() {
+		data.Ipv6DhcpRelayDestinations = make([]InterfaceEthernetIpv6DhcpRelayDestinationsData, 0)
+		value.ForEach(func(k, v gjson.Result) bool {
+			item := InterfaceEthernetIpv6DhcpRelayDestinationsData{}
+			if cValue := v.Get("ipv6-address"); cValue.Exists() {
+				item.Address = types.StringValue(cValue.String())
+			}
+			if cValue := v.Get("interface-list"); cValue.Exists() {
+				item.Interface = helpers.GetStringList(cValue.Array())
+			} else {
+				item.Interface = types.ListNull(types.StringType)
+			}
+			data.Ipv6DhcpRelayDestinations = append(data.Ipv6DhcpRelayDestinations, item)
+			return true
+		})
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.trust"); value.Exists() {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(false)
+	}
+	if value := res.Get(prefix + "ipv6.dhcp.Cisco-IOS-XE-dhcp:relay.option.vpn"); value.Exists() {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(false)
+	}
 	if value := res.Get(prefix + "ipv6.address.link-local-address"); value.Exists() {
 		data.Ipv6LinkLocalAddresses = make([]InterfaceEthernetIpv6LinkLocalAddressesData, 0)
 		value.ForEach(func(k, v gjson.Result) bool {
@@ -6102,6 +6604,64 @@ func (data *InterfaceEthernet) fromBodyXML(ctx context.Context, res xmldot.Resul
 	} else {
 		data.Ipv6AddressDhcp = types.BoolValue(false)
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server"); value.Exists() {
+		data.Ipv6DhcpServers = make([]InterfaceEthernetIpv6DhcpServers, 0)
+		value.ForEach(func(_ int, v xmldot.Result) bool {
+			item := InterfaceEthernetIpv6DhcpServers{}
+			if cValue := helpers.GetFromXPath(v, "word"); cValue.Exists() {
+				item.PoolName = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "allow-hint"); cValue.Exists() {
+				item.AllowHint = types.BoolValue(true)
+			} else {
+				item.AllowHint = types.BoolValue(false)
+			}
+			if cValue := helpers.GetFromXPath(v, "rapid-commit"); cValue.Exists() {
+				item.RapidCommit = types.BoolValue(true)
+			} else {
+				item.RapidCommit = types.BoolValue(false)
+			}
+			if cValue := helpers.GetFromXPath(v, "preference"); cValue.Exists() {
+				item.Preference = types.Int64Value(cValue.Int())
+			}
+			data.Ipv6DhcpServers = append(data.Ipv6DhcpServers, item)
+			return true
+		})
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name"); value.Exists() {
+		data.Ipv6DhcpClientPd = types.StringValue(value.String())
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit"); value.Exists() {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(false)
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address"); value.Exists() {
+		data.Ipv6DhcpRelayDestinations = make([]InterfaceEthernetIpv6DhcpRelayDestinations, 0)
+		value.ForEach(func(_ int, v xmldot.Result) bool {
+			item := InterfaceEthernetIpv6DhcpRelayDestinations{}
+			if cValue := helpers.GetFromXPath(v, "ipv6-address"); cValue.Exists() {
+				item.Address = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "interface-list"); cValue.Exists() {
+				item.Interface = helpers.GetStringListXML(cValue.Array())
+			} else {
+				item.Interface = types.ListNull(types.StringType)
+			}
+			data.Ipv6DhcpRelayDestinations = append(data.Ipv6DhcpRelayDestinations, item)
+			return true
+		})
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust"); value.Exists() {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(false)
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn"); value.Exists() {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(false)
+	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/address/link-local-address"); value.Exists() {
 		data.Ipv6LinkLocalAddresses = make([]InterfaceEthernetIpv6LinkLocalAddresses, 0)
 		value.ForEach(func(_ int, v xmldot.Result) bool {
@@ -6795,6 +7355,64 @@ func (data *InterfaceEthernetData) fromBodyXML(ctx context.Context, res xmldot.R
 		data.Ipv6AddressDhcp = types.BoolValue(true)
 	} else {
 		data.Ipv6AddressDhcp = types.BoolValue(false)
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server"); value.Exists() {
+		data.Ipv6DhcpServers = make([]InterfaceEthernetIpv6DhcpServersData, 0)
+		value.ForEach(func(_ int, v xmldot.Result) bool {
+			item := InterfaceEthernetIpv6DhcpServersData{}
+			if cValue := helpers.GetFromXPath(v, "word"); cValue.Exists() {
+				item.PoolName = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "allow-hint"); cValue.Exists() {
+				item.AllowHint = types.BoolValue(true)
+			} else {
+				item.AllowHint = types.BoolValue(false)
+			}
+			if cValue := helpers.GetFromXPath(v, "rapid-commit"); cValue.Exists() {
+				item.RapidCommit = types.BoolValue(true)
+			} else {
+				item.RapidCommit = types.BoolValue(false)
+			}
+			if cValue := helpers.GetFromXPath(v, "preference"); cValue.Exists() {
+				item.Preference = types.Int64Value(cValue.Int())
+			}
+			data.Ipv6DhcpServers = append(data.Ipv6DhcpServers, item)
+			return true
+		})
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name"); value.Exists() {
+		data.Ipv6DhcpClientPd = types.StringValue(value.String())
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit"); value.Exists() {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpClientPdRapidCommit = types.BoolValue(false)
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address"); value.Exists() {
+		data.Ipv6DhcpRelayDestinations = make([]InterfaceEthernetIpv6DhcpRelayDestinationsData, 0)
+		value.ForEach(func(_ int, v xmldot.Result) bool {
+			item := InterfaceEthernetIpv6DhcpRelayDestinationsData{}
+			if cValue := helpers.GetFromXPath(v, "ipv6-address"); cValue.Exists() {
+				item.Address = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "interface-list"); cValue.Exists() {
+				item.Interface = helpers.GetStringListXML(cValue.Array())
+			} else {
+				item.Interface = types.ListNull(types.StringType)
+			}
+			data.Ipv6DhcpRelayDestinations = append(data.Ipv6DhcpRelayDestinations, item)
+			return true
+		})
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust"); value.Exists() {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayTrust = types.BoolValue(false)
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn"); value.Exists() {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(true)
+	} else {
+		data.Ipv6DhcpRelayOptionVpn = types.BoolValue(false)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/ipv6/address/link-local-address"); value.Exists() {
 		data.Ipv6LinkLocalAddresses = make([]InterfaceEthernetIpv6LinkLocalAddressesData, 0)
@@ -7732,6 +8350,98 @@ func (data *InterfaceEthernet) getDeletedItems(ctx context.Context, state Interf
 			deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/address/link-local-address=%v", state.getPath(), strings.Join(stateKeyValues[:], ",")))
 		}
 	}
+	if !state.Ipv6DhcpRelayOptionVpn.IsNull() && data.Ipv6DhcpRelayOptionVpn.IsNull() {
+		deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn", state.getPath()))
+	}
+	if !state.Ipv6DhcpRelayTrust.IsNull() && data.Ipv6DhcpRelayTrust.IsNull() {
+		deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust", state.getPath()))
+	}
+	for i := range state.Ipv6DhcpRelayDestinations {
+		stateKeyValues := [...]string{state.Ipv6DhcpRelayDestinations[i].Address.ValueString()}
+
+		emptyKeys := true
+		if !reflect.ValueOf(state.Ipv6DhcpRelayDestinations[i].Address.ValueString()).IsZero() {
+			emptyKeys = false
+		}
+		if emptyKeys {
+			continue
+		}
+
+		found := false
+		for j := range data.Ipv6DhcpRelayDestinations {
+			found = true
+			if state.Ipv6DhcpRelayDestinations[i].Address.ValueString() != data.Ipv6DhcpRelayDestinations[j].Address.ValueString() {
+				found = false
+			}
+			if found {
+				if !state.Ipv6DhcpRelayDestinations[i].Interface.IsNull() {
+					if data.Ipv6DhcpRelayDestinations[j].Interface.IsNull() {
+						deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address=%v/interface-list", state.getPath(), strings.Join(stateKeyValues[:], ",")))
+					} else {
+						var dataValues, stateValues []string
+						data.Ipv6DhcpRelayDestinations[j].Interface.ElementsAs(ctx, &dataValues, false)
+						state.Ipv6DhcpRelayDestinations[i].Interface.ElementsAs(ctx, &stateValues, false)
+						for _, v := range stateValues {
+							found := false
+							for _, vv := range dataValues {
+								if v == vv {
+									found = true
+									break
+								}
+							}
+							if !found {
+								deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address=%v/interface-list=%v", state.getPath(), strings.Join(stateKeyValues[:], ","), v))
+							}
+						}
+					}
+				}
+				break
+			}
+		}
+		if !found {
+			deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address=%v", state.getPath(), strings.Join(stateKeyValues[:], ",")))
+		}
+	}
+	if !state.Ipv6DhcpClientPdRapidCommit.IsNull() && data.Ipv6DhcpClientPdRapidCommit.IsNull() {
+		deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit", state.getPath()))
+	}
+	if !state.Ipv6DhcpClientPd.IsNull() && data.Ipv6DhcpClientPd.IsNull() {
+		deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name", state.getPath()))
+	}
+	for i := range state.Ipv6DhcpServers {
+		stateKeyValues := [...]string{state.Ipv6DhcpServers[i].PoolName.ValueString()}
+
+		emptyKeys := true
+		if !reflect.ValueOf(state.Ipv6DhcpServers[i].PoolName.ValueString()).IsZero() {
+			emptyKeys = false
+		}
+		if emptyKeys {
+			continue
+		}
+
+		found := false
+		for j := range data.Ipv6DhcpServers {
+			found = true
+			if state.Ipv6DhcpServers[i].PoolName.ValueString() != data.Ipv6DhcpServers[j].PoolName.ValueString() {
+				found = false
+			}
+			if found {
+				if !state.Ipv6DhcpServers[i].Preference.IsNull() && data.Ipv6DhcpServers[j].Preference.IsNull() {
+					deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:server=%v/preference", state.getPath(), strings.Join(stateKeyValues[:], ",")))
+				}
+				if !state.Ipv6DhcpServers[i].RapidCommit.IsNull() && data.Ipv6DhcpServers[j].RapidCommit.IsNull() {
+					deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:server=%v/rapid-commit", state.getPath(), strings.Join(stateKeyValues[:], ",")))
+				}
+				if !state.Ipv6DhcpServers[i].AllowHint.IsNull() && data.Ipv6DhcpServers[j].AllowHint.IsNull() {
+					deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:server=%v/allow-hint", state.getPath(), strings.Join(stateKeyValues[:], ",")))
+				}
+				break
+			}
+		}
+		if !found {
+			deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:server=%v", state.getPath(), strings.Join(stateKeyValues[:], ",")))
+		}
+	}
 	if !state.Ipv6AddressDhcp.IsNull() && data.Ipv6AddressDhcp.IsNull() {
 		deletedItems = append(deletedItems, fmt.Sprintf("%v/ipv6/address/dhcp", state.getPath()))
 	}
@@ -8449,6 +9159,112 @@ func (data *InterfaceEthernet) addDeletedItemsXML(ctx context.Context, state Int
 			b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/address/link-local-address%v", predicates))
 		}
 	}
+	if !state.Ipv6DhcpRelayOptionVpn.IsNull() && data.Ipv6DhcpRelayOptionVpn.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn")
+	}
+	if !state.Ipv6DhcpRelayTrust.IsNull() && data.Ipv6DhcpRelayTrust.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust")
+	}
+	for i := range state.Ipv6DhcpRelayDestinations {
+		stateKeys := [...]string{"ipv6-address"}
+		stateKeyValues := [...]string{state.Ipv6DhcpRelayDestinations[i].Address.ValueString()}
+		predicates := ""
+		for i := range stateKeys {
+			predicates += fmt.Sprintf("[%s='%s']", stateKeys[i], stateKeyValues[i])
+		}
+
+		emptyKeys := true
+		if !reflect.ValueOf(state.Ipv6DhcpRelayDestinations[i].Address.ValueString()).IsZero() {
+			emptyKeys = false
+		}
+		if emptyKeys {
+			continue
+		}
+
+		found := false
+		for j := range data.Ipv6DhcpRelayDestinations {
+			found = true
+			if state.Ipv6DhcpRelayDestinations[i].Address.ValueString() != data.Ipv6DhcpRelayDestinations[j].Address.ValueString() {
+				found = false
+			}
+			if found {
+				if !state.Ipv6DhcpRelayDestinations[i].Interface.IsNull() {
+					if data.Ipv6DhcpRelayDestinations[j].Interface.IsNull() {
+						var values []string
+						state.Ipv6DhcpRelayDestinations[i].Interface.ElementsAs(ctx, &values, false)
+						for _, v := range values {
+							b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address%v/interface-list[.=%v]", predicates, v))
+						}
+					} else {
+						var dataValues, stateValues []string
+						data.Ipv6DhcpRelayDestinations[j].Interface.ElementsAs(ctx, &dataValues, false)
+						state.Ipv6DhcpRelayDestinations[i].Interface.ElementsAs(ctx, &stateValues, false)
+						for _, v := range stateValues {
+							found := false
+							for _, vv := range dataValues {
+								if v == vv {
+									found = true
+									break
+								}
+							}
+							if !found {
+								b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address%v/interface-list[.=%v]", predicates, v))
+							}
+						}
+					}
+				}
+				break
+			}
+		}
+		if !found {
+			b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address%v", predicates))
+		}
+	}
+	if !state.Ipv6DhcpClientPdRapidCommit.IsNull() && data.Ipv6DhcpClientPdRapidCommit.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit")
+	}
+	if !state.Ipv6DhcpClientPd.IsNull() && data.Ipv6DhcpClientPd.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name")
+	}
+	for i := range state.Ipv6DhcpServers {
+		stateKeys := [...]string{"word"}
+		stateKeyValues := [...]string{state.Ipv6DhcpServers[i].PoolName.ValueString()}
+		predicates := ""
+		for i := range stateKeys {
+			predicates += fmt.Sprintf("[%s='%s']", stateKeys[i], stateKeyValues[i])
+		}
+
+		emptyKeys := true
+		if !reflect.ValueOf(state.Ipv6DhcpServers[i].PoolName.ValueString()).IsZero() {
+			emptyKeys = false
+		}
+		if emptyKeys {
+			continue
+		}
+
+		found := false
+		for j := range data.Ipv6DhcpServers {
+			found = true
+			if state.Ipv6DhcpServers[i].PoolName.ValueString() != data.Ipv6DhcpServers[j].PoolName.ValueString() {
+				found = false
+			}
+			if found {
+				if !state.Ipv6DhcpServers[i].Preference.IsNull() && data.Ipv6DhcpServers[j].Preference.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server%v/preference", predicates))
+				}
+				if !state.Ipv6DhcpServers[i].RapidCommit.IsNull() && data.Ipv6DhcpServers[j].RapidCommit.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server%v/rapid-commit", predicates))
+				}
+				if !state.Ipv6DhcpServers[i].AllowHint.IsNull() && data.Ipv6DhcpServers[j].AllowHint.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server%v/allow-hint", predicates))
+				}
+				break
+			}
+		}
+		if !found {
+			b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server%v", predicates))
+		}
+	}
 	if !state.Ipv6AddressDhcp.IsNull() && data.Ipv6AddressDhcp.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/ipv6/address/dhcp")
 	}
@@ -8832,6 +9648,26 @@ func (data *InterfaceEthernet) getEmptyLeafsDelete(ctx context.Context) []string
 			emptyLeafsDelete = append(emptyLeafsDelete, fmt.Sprintf("%v/ipv6/address/link-local-address=%v/link-local", data.getPath(), strings.Join(keyValues[:], ",")))
 		}
 	}
+	if !data.Ipv6DhcpRelayOptionVpn.IsNull() && !data.Ipv6DhcpRelayOptionVpn.ValueBool() {
+		emptyLeafsDelete = append(emptyLeafsDelete, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn", data.getPath()))
+	}
+	if !data.Ipv6DhcpRelayTrust.IsNull() && !data.Ipv6DhcpRelayTrust.ValueBool() {
+		emptyLeafsDelete = append(emptyLeafsDelete, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust", data.getPath()))
+	}
+
+	if !data.Ipv6DhcpClientPdRapidCommit.IsNull() && !data.Ipv6DhcpClientPdRapidCommit.ValueBool() {
+		emptyLeafsDelete = append(emptyLeafsDelete, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit", data.getPath()))
+	}
+
+	for i := range data.Ipv6DhcpServers {
+		keyValues := [...]string{data.Ipv6DhcpServers[i].PoolName.ValueString()}
+		if !data.Ipv6DhcpServers[i].RapidCommit.IsNull() && !data.Ipv6DhcpServers[i].RapidCommit.ValueBool() {
+			emptyLeafsDelete = append(emptyLeafsDelete, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:server=%v/rapid-commit", data.getPath(), strings.Join(keyValues[:], ",")))
+		}
+		if !data.Ipv6DhcpServers[i].AllowHint.IsNull() && !data.Ipv6DhcpServers[i].AllowHint.ValueBool() {
+			emptyLeafsDelete = append(emptyLeafsDelete, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:server=%v/allow-hint", data.getPath(), strings.Join(keyValues[:], ",")))
+		}
+	}
 	if !data.Ipv6AddressDhcp.IsNull() && !data.Ipv6AddressDhcp.ValueBool() {
 		emptyLeafsDelete = append(emptyLeafsDelete, fmt.Sprintf("%v/ipv6/address/dhcp", data.getPath()))
 	}
@@ -9192,6 +10028,28 @@ func (data *InterfaceEthernet) getDeletePaths(ctx context.Context) []string {
 		keyValues := [...]string{data.Ipv6LinkLocalAddresses[i].Address.ValueString()}
 
 		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/address/link-local-address=%v", data.getPath(), strings.Join(keyValues[:], ",")))
+	}
+	if !data.Ipv6DhcpRelayOptionVpn.IsNull() {
+		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn", data.getPath()))
+	}
+	if !data.Ipv6DhcpRelayTrust.IsNull() {
+		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust", data.getPath()))
+	}
+	for i := range data.Ipv6DhcpRelayDestinations {
+		keyValues := [...]string{data.Ipv6DhcpRelayDestinations[i].Address.ValueString()}
+
+		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address=%v", data.getPath(), strings.Join(keyValues[:], ",")))
+	}
+	if !data.Ipv6DhcpClientPdRapidCommit.IsNull() {
+		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit", data.getPath()))
+	}
+	if !data.Ipv6DhcpClientPd.IsNull() {
+		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name", data.getPath()))
+	}
+	for i := range data.Ipv6DhcpServers {
+		keyValues := [...]string{data.Ipv6DhcpServers[i].PoolName.ValueString()}
+
+		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/dhcp/Cisco-IOS-XE-dhcp:server=%v", data.getPath(), strings.Join(keyValues[:], ",")))
 	}
 	if !data.Ipv6AddressDhcp.IsNull() {
 		deletePaths = append(deletePaths, fmt.Sprintf("%v/ipv6/address/dhcp", data.getPath()))
@@ -9673,6 +10531,38 @@ func (data *InterfaceEthernet) addDeletePathsXML(ctx context.Context, body strin
 		}
 
 		b = helpers.RemoveFromXPath(b, fmt.Sprintf(data.getXPath()+"/ipv6/address/link-local-address%v", predicates))
+	}
+	if !data.Ipv6DhcpRelayOptionVpn.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/option/vpn")
+	}
+	if !data.Ipv6DhcpRelayTrust.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/trust")
+	}
+	for i := range data.Ipv6DhcpRelayDestinations {
+		keys := [...]string{"ipv6-address"}
+		keyValues := [...]string{data.Ipv6DhcpRelayDestinations[i].Address.ValueString()}
+		predicates := ""
+		for i := range keys {
+			predicates += fmt.Sprintf("[%s='%s']", keys[i], keyValues[i])
+		}
+
+		b = helpers.RemoveFromXPath(b, fmt.Sprintf(data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:relay/destination/address%v", predicates))
+	}
+	if !data.Ipv6DhcpClientPdRapidCommit.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/rapid-commit")
+	}
+	if !data.Ipv6DhcpClientPd.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:client/pd/pd-prefix/prefix-name")
+	}
+	for i := range data.Ipv6DhcpServers {
+		keys := [...]string{"word"}
+		keyValues := [...]string{data.Ipv6DhcpServers[i].PoolName.ValueString()}
+		predicates := ""
+		for i := range keys {
+			predicates += fmt.Sprintf("[%s='%s']", keys[i], keyValues[i])
+		}
+
+		b = helpers.RemoveFromXPath(b, fmt.Sprintf(data.getXPath()+"/ipv6/dhcp/Cisco-IOS-XE-dhcp:server%v", predicates))
 	}
 	if !data.Ipv6AddressDhcp.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/ipv6/address/dhcp")
