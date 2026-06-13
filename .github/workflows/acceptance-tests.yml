@@ -1,0 +1,121 @@
+name: Acceptance Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      devices:
+        description: "Which devices to test against"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - routers-only
+          - switches-only
+          - "17.12"
+          - "17.15"
+          - "17.18"
+      test_name:
+        description: "Test name pattern (regex for -run flag, e.g. TestAccIosxeBgp)"
+        required: false
+        type: string
+
+concurrency:
+  group: acceptance-tests
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: "${{ matrix.name }}"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: iosxe-devices
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "17.12 Router (C8000V)"
+            key: "1712-router"
+            host_secret: IOSXE_C8KV_17_12_HOST
+            version_flag: IOSXE1712
+            platform_flag: C8000V
+            version_group: "17.12"
+            platform_group: router
+          - name: "17.12 Switch (C9000V)"
+            key: "1712-switch"
+            host_secret: IOSXE_C9KV_17_12_HOST
+            version_flag: IOSXE1712
+            platform_flag: C9000V
+            version_group: "17.12"
+            platform_group: switch
+          - name: "17.15 Router (C8000V)"
+            key: "1715-router"
+            host_secret: IOSXE_C8KV_17_15_HOST
+            version_flag: IOSXE1715
+            platform_flag: C8000V
+            version_group: "17.15"
+            platform_group: router
+          - name: "17.15 Switch (C9000V)"
+            key: "1715-switch"
+            host_secret: IOSXE_C9KV_17_15_HOST
+            version_flag: IOSXE1715
+            platform_flag: C9000V
+            version_group: "17.15"
+            platform_group: switch
+          - name: "17.18 Router (C8000V)"
+            key: "1718-router"
+            host_secret: IOSXE_C8KV_17_18_HOST
+            version_flag: IOSXE1718
+            platform_flag: C8000V
+            version_group: "17.18"
+            platform_group: router
+          - name: "17.18 Switch (C9000V)"
+            key: "1718-switch"
+            host_secret: IOSXE_C9KV_17_18_HOST
+            version_flag: IOSXE1718
+            platform_flag: C9000V
+            version_group: "17.18"
+            platform_group: switch
+    if: |
+      (inputs.devices == 'all') ||
+      (inputs.devices == 'routers-only' && matrix.platform_group == 'router') ||
+      (inputs.devices == 'switches-only' && matrix.platform_group == 'switch') ||
+      (inputs.devices == '17.12' && matrix.version_group == '17.12') ||
+      (inputs.devices == '17.15' && matrix.version_group == '17.15') ||
+      (inputs.devices == '17.18' && matrix.version_group == '17.18')
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: "go.mod"
+          cache: true
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
+      - run: go mod download
+
+      - name: Run acceptance tests
+        env:
+          TF_ACC: "1"
+          IOSXE_HOST: ${{ secrets[matrix.host_secret] }}
+          IOSXE_USERNAME: ${{ secrets.IOSXE_USERNAME }}
+          IOSXE_PASSWORD: ${{ secrets.IOSXE_PASSWORD }}
+          IOSXE_PROTOCOL: netconf
+          "${{ matrix.version_flag }}": "1"
+          "${{ matrix.platform_flag }}": "1"
+        run: |
+          go test -v -count 1 -timeout 55m \
+            ${{ inputs.test_name && format('-run {0}', inputs.test_name) }} \
+            ./internal/provider/ 2>&1 | tee test-output.log
+        timeout-minutes: 55
+
+      - name: Upload test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output-${{ matrix.key }}
+          path: test-output.log
+          retention-days: 14
