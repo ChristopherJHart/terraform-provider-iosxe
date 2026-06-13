@@ -36,27 +36,20 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          ALL='[
-            {"name":"17.12 Router (C8000V)","key":"1712-router","host_secret":"IOSXE_C8KV_17_12_HOST","version_flag":"IOSXE1712","platform_flag":"C8000V","version_group":"17.12","platform_group":"router"},
-            {"name":"17.12 Switch (C9000V)","key":"1712-switch","host_secret":"IOSXE_C9KV_17_12_HOST","version_flag":"IOSXE1712","platform_flag":"C9000V","version_group":"17.12","platform_group":"switch"},
-            {"name":"17.15 Router (C8000V)","key":"1715-router","host_secret":"IOSXE_C8KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C8000V","version_group":"17.15","platform_group":"router"},
-            {"name":"17.15 Switch (C9000V)","key":"1715-switch","host_secret":"IOSXE_C9KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C9000V","version_group":"17.15","platform_group":"switch"},
-            {"name":"17.18 Router (C8000V)","key":"1718-router","host_secret":"IOSXE_C8KV_17_18_HOST","version_flag":"IOSXE1718","platform_flag":"C8000V","version_group":"17.18","platform_group":"router"},
-            {"name":"17.18 Switch (C9000V)","key":"1718-switch","host_secret":"IOSXE_C9KV_17_18_HOST","version_flag":"IOSXE1718","platform_flag":"C9000V","version_group":"17.18","platform_group":"switch"}
-          ]'
+          ALL='[{"name":"17.12 Router (C8000V)","key":"1712-router","host_secret":"IOSXE_C8KV_17_12_HOST","version_flag":"IOSXE1712","platform_flag":"C8000V","version_group":"17.12","platform_group":"router"},{"name":"17.12 Switch (C9000V)","key":"1712-switch","host_secret":"IOSXE_C9KV_17_12_HOST","version_flag":"IOSXE1712","platform_flag":"C9000V","version_group":"17.12","platform_group":"switch"},{"name":"17.15 Router (C8000V)","key":"1715-router","host_secret":"IOSXE_C8KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C8000V","version_group":"17.15","platform_group":"router"},{"name":"17.15 Switch (C9000V)","key":"1715-switch","host_secret":"IOSXE_C9KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C9000V","version_group":"17.15","platform_group":"switch"},{"name":"17.18 Router (C8000V)","key":"1718-router","host_secret":"IOSXE_C8KV_17_18_HOST","version_flag":"IOSXE1718","platform_flag":"C8000V","version_group":"17.18","platform_group":"router"},{"name":"17.18 Switch (C9000V)","key":"1718-switch","host_secret":"IOSXE_C9KV_17_18_HOST","version_flag":"IOSXE1718","platform_flag":"C9000V","version_group":"17.18","platform_group":"switch"}]'
 
           FILTER="${{ inputs.devices }}"
           if [ "$FILTER" = "all" ]; then
             MATRIX="$ALL"
           elif [ "$FILTER" = "routers-only" ]; then
-            MATRIX=$(echo "$ALL" | jq '[.[] | select(.platform_group == "router")]')
+            MATRIX=$(echo "$ALL" | jq -c '[.[] | select(.platform_group == "router")]')
           elif [ "$FILTER" = "switches-only" ]; then
-            MATRIX=$(echo "$ALL" | jq '[.[] | select(.platform_group == "switch")]')
+            MATRIX=$(echo "$ALL" | jq -c '[.[] | select(.platform_group == "switch")]')
           else
-            MATRIX=$(echo "$ALL" | jq --arg v "$FILTER" '[.[] | select(.version_group == $v)]')
+            MATRIX=$(echo "$ALL" | jq -c --arg v "$FILTER" '[.[] | select(.version_group == $v)]')
           fi
 
-          echo "matrix={\"include\":$MATRIX}" >> $GITHUB_OUTPUT
+          echo "matrix={\"include\":$(echo "$MATRIX" | jq -c .)}" >> $GITHUB_OUTPUT
 
   test:
     name: "${{ matrix.name }}"
