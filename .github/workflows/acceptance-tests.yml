@@ -80,7 +80,9 @@ jobs:
           IOSXE_PROTOCOL: netconf
           "${{ matrix.version_flag }}": "1"
           "${{ matrix.platform_flag }}": "1"
+        shell: bash
         run: |
+          set -o pipefail
           go test -v -count 1 -timeout 55m \
             ${{ inputs.test_name && format('-run {0}', inputs.test_name) }} \
             ./internal/provider/ 2>&1 | tee test-output.log
