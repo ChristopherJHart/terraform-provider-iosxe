@@ -84,6 +84,7 @@ jobs:
           IOSXE_USERNAME: ${{ secrets.IOSXE_USERNAME }}
           IOSXE_PASSWORD: ${{ secrets.IOSXE_PASSWORD }}
           IOSXE_PROTOCOL: netconf
+          IOSXE_REUSE_CONNECTION: "false"
           "${{ matrix.version_flag }}": "1"
           "${{ matrix.platform_flag }}": "1"
         shell: bash
