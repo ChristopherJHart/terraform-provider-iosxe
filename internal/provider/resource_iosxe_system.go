@@ -1095,6 +1095,22 @@ func (r *SystemResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: helpers.NewAttributeDescription("MLD querier disable/enable").String,
 				Optional:            true,
 			},
+			"power_redundancy_mode": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Power supply redundancy mode").AddStringEnumDescription("combined", "redundant").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("combined", "redundant"),
+				},
+			},
+			"power_supply_autolc_shutdown": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Linecard auto shutdown control").String,
+				Optional:            true,
+			},
+			"power_supply_autolc_priority": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Priority (highest to lowest) of auto linecard shutdown").String,
+				ElementType:         types.Int64Type,
+				Optional:            true,
+			},
 		},
 	}
 }
