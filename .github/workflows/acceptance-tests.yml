@@ -17,7 +17,6 @@ on:
           - all
           - routers-only
           - switches-only
-          - "17.12"
           - "17.15"
           - "17.18"
       test_name:
@@ -41,8 +40,8 @@ jobs:
     steps:
       - id: set-matrix
         run: |
-          # NOTE: 17.18 Switch (C9000V) excluded due to Cat9Kv NETCONF datastore lock bug
-          ALL='[{"name":"17.12 Router (C8000V)","key":"1712-router","host_secret":"IOSXE_C8KV_17_12_HOST","version_flag":"IOSXE1712","platform_flag":"C8000V","version_group":"17.12","platform_group":"router"},{"name":"17.12 Switch (C9000V)","key":"1712-switch","host_secret":"IOSXE_C9KV_17_12_HOST","version_flag":"IOSXE1712","platform_flag":"C9000V","version_group":"17.12","platform_group":"switch"},{"name":"17.15 Router (C8000V)","key":"1715-router","host_secret":"IOSXE_C8KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C8000V","version_group":"17.15","platform_group":"router"},{"name":"17.15 Switch (C9000V)","key":"1715-switch","host_secret":"IOSXE_C9KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C9000V","version_group":"17.15","platform_group":"switch"},{"name":"17.18 Router (C8000V)","key":"1718-router","host_secret":"IOSXE_C8KV_17_18_HOST","version_flag":"IOSXE1718","platform_flag":"C8000V","version_group":"17.18","platform_group":"router"}]'
+          # NOTE: 17.12 dropped upstream (#597). 17.18 Switch excluded due to Cat9Kv NETCONF datastore lock bug.
+          ALL='[{"name":"17.15 Router (C8000V)","key":"1715-router","host_secret":"IOSXE_C8KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C8000V","version_group":"17.15","platform_group":"router"},{"name":"17.15 Switch (C9000V)","key":"1715-switch","host_secret":"IOSXE_C9KV_17_15_HOST","version_flag":"IOSXE1715","platform_flag":"C9000V","version_group":"17.15","platform_group":"switch"},{"name":"17.18 Router (C8000V)","key":"1718-router","host_secret":"IOSXE_C8KV_17_18_HOST","version_flag":"IOSXE1718","platform_flag":"C8000V","version_group":"17.18","platform_group":"router"}]'
 
           FILTER="${{ inputs.devices || 'all' }}"
           if [ "$FILTER" = "all" ]; then
