@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## Unreleased
+## 1.1.1
 
 - Bump `go-netconf` dependency to v0.6.2, reverting a transitive `scrapligo` dependency bump to v1.4.1 that caused intermittent connection errors on the first operation of a new NETCONF session against some IOS-XE devices
 
