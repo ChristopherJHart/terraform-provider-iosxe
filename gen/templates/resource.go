@@ -643,6 +643,13 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 				return
 			}
 		}
+
+		{{- if hasDeleteCommandAttrs .Attributes}}
+		state.executeDeleteCommands(ctx, device, &resp.Diagnostics)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+		{{- end}}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))

@@ -29,6 +29,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/CiscoDevNet/terraform-provider-iosxe/internal/provider/helpers"
@@ -1355,5 +1356,25 @@ func (data *{{camelCase .Name}}) addDeletePathsXML(ctx context.Context, body str
 	b = helpers.CleanupRedundantRemoveOperations(b)
 	return b.Res()
 }
+
+{{- if hasDeleteCommandAttrs .Attributes}}
+
+func (data *{{camelCase .Name}}) executeDeleteCommands(ctx context.Context, device *IosxeProviderDataDevice, diags *diag.Diagnostics) {
+	ifContext := helpers.InterfaceContextFromXPath(data.getPath())
+	{{- range (xpathAttributes .Attributes)}}
+	{{- if .DeleteCommand}}
+	if !data.{{toGoName .TfName}}.IsNull() && data.{{toGoName .TfName}}.ValueBool() {
+		cli := ifContext + "\n{{.DeleteCommand}}"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for {{.TfName}}: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for {{.TfName}} (%s): %s", data.getPath(), err))
+		}
+	}
+	{{- end}}
+	{{- end}}
+}
+{{- end}}
 
 // End of section. //template:end addDeletePathsXML

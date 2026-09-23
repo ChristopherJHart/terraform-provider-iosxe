@@ -28,6 +28,7 @@ import (
 	"strconv"
 
 	"github.com/CiscoDevNet/terraform-provider-iosxe/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-netconf"
@@ -5149,6 +5150,39 @@ func (data *InterfaceEthernet) addDeletedItemsXML(ctx context.Context, state Int
 	if !state.TrustDevice.IsNull() && data.TrustDevice.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/trust/device")
 	}
+	if !state.AutoQosVoipTrust.IsNull() && data.AutoQosVoipTrust.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/voip/trust")
+	}
+	if !state.AutoQosVoipCiscoSoftphone.IsNull() && data.AutoQosVoipCiscoSoftphone.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/voip/cisco-softphone")
+	}
+	if !state.AutoQosVoipCiscoPhone.IsNull() && data.AutoQosVoipCiscoPhone.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/voip/cisco-phone")
+	}
+	if !state.AutoQosVideoMediaPlayer.IsNull() && data.AutoQosVideoMediaPlayer.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/video/media-player")
+	}
+	if !state.AutoQosVideoIpCamera.IsNull() && data.AutoQosVideoIpCamera.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/video/ip-camera")
+	}
+	if !state.AutoQosVideoCts.IsNull() && data.AutoQosVideoCts.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/video/cts")
+	}
+	if !state.AutoQosTrustDscp.IsNull() && data.AutoQosTrustDscp.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/trust/dscp")
+	}
+	if !state.AutoQosTrustCos.IsNull() && data.AutoQosTrustCos.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/trust/cos")
+	}
+	if !state.AutoQosTrust.IsNull() && data.AutoQosTrust.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/trust")
+	}
+	if !state.AutoQosClassifyPolice.IsNull() && data.AutoQosClassifyPolice.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/classify/police")
+	}
+	if !state.AutoQosClassify.IsNull() && data.AutoQosClassify.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/classify")
+	}
 	if !state.SpanningTreeGuard.IsNull() && data.SpanningTreeGuard.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/Cisco-IOS-XE-spanning-tree:spanning-tree/guard")
 	}
@@ -5649,6 +5683,39 @@ func (data *InterfaceEthernet) addDeletePathsXML(ctx context.Context, body strin
 	if !data.TrustDevice.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/trust/device")
 	}
+	if !data.AutoQosVoipTrust.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/voip/trust")
+	}
+	if !data.AutoQosVoipCiscoSoftphone.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/voip/cisco-softphone")
+	}
+	if !data.AutoQosVoipCiscoPhone.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/voip/cisco-phone")
+	}
+	if !data.AutoQosVideoMediaPlayer.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/video/media-player")
+	}
+	if !data.AutoQosVideoIpCamera.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/video/ip-camera")
+	}
+	if !data.AutoQosVideoCts.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/video/cts")
+	}
+	if !data.AutoQosTrustDscp.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/trust/dscp")
+	}
+	if !data.AutoQosTrustCos.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/trust/cos")
+	}
+	if !data.AutoQosTrust.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/trust")
+	}
+	if !data.AutoQosClassifyPolice.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/classify/police")
+	}
+	if !data.AutoQosClassify.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-switch:auto/qos/classify")
+	}
 	if !data.SpanningTreeGuard.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/Cisco-IOS-XE-spanning-tree:spanning-tree/guard")
 	}
@@ -5721,6 +5788,109 @@ func (data *InterfaceEthernet) addDeletePathsXML(ctx context.Context, body strin
 
 	b = helpers.CleanupRedundantRemoveOperations(b)
 	return b.Res()
+}
+
+func (data *InterfaceEthernet) executeDeleteCommands(ctx context.Context, device *IosxeProviderDataDevice, diags *diag.Diagnostics) {
+	ifContext := helpers.InterfaceContextFromXPath(data.getPath())
+	if !data.AutoQosClassify.IsNull() && data.AutoQosClassify.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_classify: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_classify (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosClassifyPolice.IsNull() && data.AutoQosClassifyPolice.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_classify_police: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_classify_police (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosTrust.IsNull() && data.AutoQosTrust.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_trust: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_trust (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosTrustCos.IsNull() && data.AutoQosTrustCos.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_trust_cos: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_trust_cos (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosTrustDscp.IsNull() && data.AutoQosTrustDscp.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_trust_dscp: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_trust_dscp (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosVideoCts.IsNull() && data.AutoQosVideoCts.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_video_cts: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_video_cts (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosVideoIpCamera.IsNull() && data.AutoQosVideoIpCamera.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_video_ip_camera: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_video_ip_camera (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosVideoMediaPlayer.IsNull() && data.AutoQosVideoMediaPlayer.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_video_media_player: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_video_media_player (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosVoipCiscoPhone.IsNull() && data.AutoQosVoipCiscoPhone.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_voip_cisco_phone: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_voip_cisco_phone (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosVoipCiscoSoftphone.IsNull() && data.AutoQosVoipCiscoSoftphone.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_voip_cisco_softphone: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_voip_cisco_softphone (%s): %s", data.getPath(), err))
+		}
+	}
+	if !data.AutoQosVoipTrust.IsNull() && data.AutoQosVoipTrust.ValueBool() {
+		cli := ifContext + "\nno auto qos"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Executing delete command for auto_qos_voip_trust: %s", data.getPath(), cli))
+		body := netconf.Body{}
+		body = helpers.SetFromXPath(body, "/Cisco-IOS-XE-cli-rpc:config-ios-cli-trans/clis", cli)
+		if _, err := device.NetconfClient.RPC(ctx, body.Res()); err != nil {
+			diags.AddWarning("Delete Command Warning", fmt.Sprintf("Failed to execute delete command for auto_qos_voip_trust (%s): %s", data.getPath(), err))
+		}
+	}
 }
 
 // End of section. //template:end addDeletePathsXML

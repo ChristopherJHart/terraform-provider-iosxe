@@ -1253,6 +1253,10 @@ func (r *InterfaceEthernetResource) Delete(ctx context.Context, req resource.Del
 				return
 			}
 		}
+		state.executeDeleteCommands(ctx, device, &resp.Diagnostics)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))

@@ -687,6 +687,10 @@ func (r *InterfacePortChannelSubinterfaceResource) Delete(ctx context.Context, r
 				return
 			}
 		}
+		state.executeDeleteCommands(ctx, device, &resp.Diagnostics)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
