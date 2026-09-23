@@ -1,3 +1,7 @@
+## Unreleased
+
+- Add `asnotation_dot` attribute to `iosxe_bgp` resource and data source for `bgp asnotation dot` configuration, enabling asdot notation for 4-byte BGP AS numbers
+
 ## 1.0.0
 
 - BREAKING CHANGE: Consolidate `iosxe_device_tracking_policy` into `iosxe_device_tracking` as a `policies` list attribute
