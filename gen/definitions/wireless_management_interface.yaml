@@ -1,0 +1,10 @@
+---
+name: Wireless Management Interface
+path: /Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data
+doc_category: Wireless
+attributes:
+  - yang_name: interface-name
+    tf_name: interface_name
+    type: String
+    example: Vlan10
+    exclude_test: true
