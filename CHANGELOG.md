@@ -1,6 +1,7 @@
 ## Unreleased
 
 - Add wireless YANG model support (wlan, rf, site, flex, mesh, general, ap profiles)
+- Add `iosxe_wireless_flex_profile` resource and data source for Catalyst 9800 FlexConnect flex profile configuration (`wireless profile flex`), including native VLAN, VLAN name-to-ID mapping, ACL policies, ARP caching, fallback radio shut, and efficient AP image upgrade
 
 ## 1.1.1
 
