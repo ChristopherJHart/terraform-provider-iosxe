@@ -1,0 +1,28 @@
+---
+name: Wireless Site Tag
+path: /Cisco-IOS-XE-wireless-site-cfg:site-cfg-data/site-tag-configs/site-tag-config[site-tag-name=%s]
+no_delete_attributes: true
+no_augment_config: true
+doc_category: Wireless
+attributes:
+  - yang_name: site-tag-name
+    tf_name: site_tag_name
+    type: String
+    id: true
+    example: ST1
+  - yang_name: description
+    tf_name: description
+    type: String
+    example: My Site Tag
+  - yang_name: ap-join-profile
+    tf_name: ap_join_profile
+    type: String
+    example: default-ap-profile
+  - yang_name: flex-profile
+    tf_name: flex_profile
+    type: String
+    example: default-flex-profile
+  - yang_name: is-local-site
+    tf_name: local_site
+    type: Bool
+    example: false

@@ -713,6 +713,7 @@ func (p *IosxeProvider) Resources(_ context.Context) []func() resource.Resource 
 		NewVRFResource,
 		NewInterfaceVRRPV2Resource,
 		NewVTPResource,
+		NewWirelessSiteTagResource,
 		NewZonePairSecurityResource,
 		NewZoneSecurityResource,
 	}
@@ -856,6 +857,7 @@ func (p *IosxeProvider) DataSources(_ context.Context) []func() datasource.DataS
 		NewVRFDataSource,
 		NewInterfaceVRRPV2DataSource,
 		NewVTPDataSource,
+		NewWirelessSiteTagDataSource,
 		NewZonePairSecurityDataSource,
 		NewZoneSecurityDataSource,
 	}
