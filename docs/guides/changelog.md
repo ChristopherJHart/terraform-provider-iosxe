@@ -7,6 +7,11 @@ description: |-
 
 # Changelog
 
+## Unreleased
+
+- Add wireless YANG model support (wlan, rf, site, flex, mesh, general, ap profiles)
+- Add `iosxe_wireless_flex_profile` resource and data source for Catalyst 9800 FlexConnect flex profile configuration (`wireless profile flex`), including native VLAN, VLAN name-to-ID mapping, ACL policies, ARP caching, fallback radio shut, and efficient AP image upgrade
+
 ## 1.1.1
 
 - Bump `go-netconf` dependency to v0.6.2, reverting a transitive `scrapligo` dependency bump to v1.4.1 that caused intermittent connection errors on the first operation of a new NETCONF session against some IOS-XE devices
