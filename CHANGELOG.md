@@ -1,6 +1,8 @@
 ## Unreleased
 
 - Add wireless YANG model support (wlan, rf, site, flex, mesh, general, ap profiles)
+- Add `iosxe_wireless_policy_profile` resource and data source for C9800 wireless policy profile configuration, including AAA override, NAC, session/idle timeouts, exclusion list timeout, VLAN assignment, ACLs, QoS service policies, static IP mobility, DHCP/HTTP TLV caching, AVC flow monitors, and mobility anchors
+- Add `iosxe_wireless_policy_tag` resource and data source for C9800 wireless policy tag configuration, mapping WLAN profiles to policy profiles
 
 ## 1.1.1
 
