@@ -57,7 +57,7 @@ func (d *WirelessManagementInterfaceDataSource) Metadata(_ context.Context, req 
 func (d *WirelessManagementInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "",
+		MarkdownDescription: "This data source can read the Wireless Management Interface configuration.",
 
 		Attributes: map[string]schema.Attribute{
 			"device": schema.StringAttribute{
@@ -69,7 +69,7 @@ func (d *WirelessManagementInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Wireless management interface name",
 				Computed:            true,
 			},
 		},

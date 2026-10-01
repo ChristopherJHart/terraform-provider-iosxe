@@ -3,12 +3,12 @@
 page_title: "iosxe_wireless_management_interface Data Source - terraform-provider-iosxe"
 subcategory: "Wireless"
 description: |-
-  
+  This data source can read the Wireless Management Interface configuration.
 ---
 
 # iosxe_wireless_management_interface (Data Source)
 
-
+This data source can read the Wireless Management Interface configuration.
 
 ## Example Usage
 
@@ -27,4 +27,4 @@ data "iosxe_wireless_management_interface" "example" {
 ### Read-Only
 
 - `id` (String) The path of the retrieved object.
-- `interface_name` (String)
+- `interface_name` (String) Wireless management interface name
