@@ -32,24 +32,24 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccIosxeWirelessManagementInterface(t *testing.T) {
+func TestAccIosxeWirelessSystem(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIosxeWirelessManagementInterfaceConfig_minimum(),
+				Config: testAccIosxeWirelessSystemConfig_minimum(),
 			},
 			{
-				Config: testAccIosxeWirelessManagementInterfaceConfig_all(),
+				Config: testAccIosxeWirelessSystemConfig_all(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				ResourceName:            "iosxe_wireless_management_interface.test",
+				ResourceName:            "iosxe_wireless_system.test",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateIdFunc:       iosxeWirelessManagementInterfaceImportStateIdFunc("iosxe_wireless_management_interface.test"),
+				ImportStateIdFunc:       iosxeWirelessSystemImportStateIdFunc("iosxe_wireless_system.test"),
 				ImportStateVerifyIgnore: []string{},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
@@ -61,7 +61,7 @@ func TestAccIosxeWirelessManagementInterface(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin importStateIdFunc
 
-func iosxeWirelessManagementInterfaceImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
+func iosxeWirelessSystemImportStateIdFunc(resourceName string) resource.ImportStateIdFunc {
 	return func(s *terraform.State) (string, error) {
 
 		return fmt.Sprintf(""), nil
@@ -75,8 +75,8 @@ func iosxeWirelessManagementInterfaceImportStateIdFunc(resourceName string) reso
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccIosxeWirelessManagementInterfaceConfig_minimum() string {
-	config := `resource "iosxe_wireless_management_interface" "test" {` + "\n"
+func testAccIosxeWirelessSystemConfig_minimum() string {
+	config := `resource "iosxe_wireless_system" "test" {` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -85,8 +85,8 @@ func testAccIosxeWirelessManagementInterfaceConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccIosxeWirelessManagementInterfaceConfig_all() string {
-	config := `resource "iosxe_wireless_management_interface" "test" {` + "\n"
+func testAccIosxeWirelessSystemConfig_all() string {
+	config := `resource "iosxe_wireless_system" "test" {` + "\n"
 	config += `}` + "\n"
 	return config
 }

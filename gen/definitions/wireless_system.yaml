@@ -1,5 +1,5 @@
 ---
-name: Wireless Management Interface
+name: Wireless System
 path: /Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data
 doc_category: Wireless
 attributes:

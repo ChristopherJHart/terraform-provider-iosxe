@@ -30,14 +30,14 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
-func TestAccDataSourceIosxeWirelessManagementInterface(t *testing.T) {
+func TestAccDataSourceIosxeWirelessSystem(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceIosxeWirelessManagementInterfaceConfig(),
+				Config: testAccDataSourceIosxeWirelessSystemConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -51,14 +51,14 @@ func TestAccDataSourceIosxeWirelessManagementInterface(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 
-func testAccDataSourceIosxeWirelessManagementInterfaceConfig() string {
-	config := `resource "iosxe_wireless_management_interface" "test" {` + "\n"
+func testAccDataSourceIosxeWirelessSystemConfig() string {
+	config := `resource "iosxe_wireless_system" "test" {` + "\n"
 	config += `	delete_mode = "attributes"` + "\n"
 	config += `}` + "\n"
 
 	config += `
-		data "iosxe_wireless_management_interface" "test" {
-			depends_on = [iosxe_wireless_management_interface.test]
+		data "iosxe_wireless_system" "test" {
+			depends_on = [iosxe_wireless_system.test]
 		}
 	`
 	return config

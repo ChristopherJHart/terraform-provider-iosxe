@@ -1,7 +1,7 @@
 ## Unreleased
 
 - Add wireless YANG model support (wlan, rf, site, flex, mesh, general, ap profiles)
-- Add `iosxe_wireless_management_interface` resource and data source
+- Add `iosxe_wireless_system` resource and data source
 
 ## 1.1.1
 

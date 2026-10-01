@@ -34,14 +34,14 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
-type WirelessManagementInterface struct {
+type WirelessSystem struct {
 	Device        types.String `tfsdk:"device"`
 	Id            types.String `tfsdk:"id"`
 	DeleteMode    types.String `tfsdk:"delete_mode"`
 	InterfaceName types.String `tfsdk:"interface_name"`
 }
 
-type WirelessManagementInterfaceData struct {
+type WirelessSystemData struct {
 	Device        types.String `tfsdk:"device"`
 	Id            types.String `tfsdk:"id"`
 	InterfaceName types.String `tfsdk:"interface_name"`
@@ -51,21 +51,21 @@ type WirelessManagementInterfaceData struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data WirelessManagementInterface) getPath() string {
+func (data WirelessSystem) getPath() string {
 	return "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data"
 }
 
-func (data WirelessManagementInterfaceData) getPath() string {
+func (data WirelessSystemData) getPath() string {
 	return "Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data"
 }
 
 // getXPath returns the XPath for NETCONF operations
-func (data WirelessManagementInterface) getXPath() string {
+func (data WirelessSystem) getXPath() string {
 	path := "/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data"
 	return path
 }
 
-func (data WirelessManagementInterfaceData) getXPath() string {
+func (data WirelessSystemData) getXPath() string {
 	path := "/Cisco-IOS-XE-wireless-general-cfg:general-cfg-data/sim-l3-interface-cache-data"
 	return path
 }
@@ -74,7 +74,7 @@ func (data WirelessManagementInterfaceData) getXPath() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyXML
 
-func (data WirelessManagementInterface) toBodyXML(ctx context.Context, config WirelessManagementInterface) string {
+func (data WirelessSystem) toBodyXML(ctx context.Context, config WirelessSystem) string {
 	body := data.addToBodyXML(ctx, config, netconf.Body{})
 	bodyString, err := body.String()
 	if err != nil {
@@ -85,7 +85,7 @@ func (data WirelessManagementInterface) toBodyXML(ctx context.Context, config Wi
 
 // addToBodyXML adds this object to an existing body instead of starting from an empty one. Bulk
 // resources use this to serialize all of their items into a single NETCONF payload.
-func (data WirelessManagementInterface) addToBodyXML(ctx context.Context, config WirelessManagementInterface, body netconf.Body) netconf.Body {
+func (data WirelessSystem) addToBodyXML(ctx context.Context, config WirelessSystem, body netconf.Body) netconf.Body {
 	if !data.InterfaceName.IsNull() && !data.InterfaceName.IsUnknown() {
 		body = helpers.SetFromXPath(body, data.getXPath()+"/interface-name", data.InterfaceName.ValueString())
 	}
@@ -96,7 +96,7 @@ func (data WirelessManagementInterface) addToBodyXML(ctx context.Context, config
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBodyXML
 
-func (data *WirelessManagementInterface) updateFromBodyXML(ctx context.Context, res xmldot.Result) {
+func (data *WirelessSystem) updateFromBodyXML(ctx context.Context, res xmldot.Result) {
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/interface-name"); value.Exists() && !data.InterfaceName.IsNull() {
 		data.InterfaceName = types.StringValue(value.String())
 	} else {
@@ -108,7 +108,7 @@ func (data *WirelessManagementInterface) updateFromBodyXML(ctx context.Context, 
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyXML
 
-func (data *WirelessManagementInterface) fromBodyXML(ctx context.Context, res xmldot.Result) {
+func (data *WirelessSystem) fromBodyXML(ctx context.Context, res xmldot.Result) {
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/interface-name"); value.Exists() {
 		data.InterfaceName = types.StringValue(value.String())
 	}
@@ -118,7 +118,7 @@ func (data *WirelessManagementInterface) fromBodyXML(ctx context.Context, res xm
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyDataXML
 
-func (data *WirelessManagementInterfaceData) fromBodyXML(ctx context.Context, res xmldot.Result) {
+func (data *WirelessSystemData) fromBodyXML(ctx context.Context, res xmldot.Result) {
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/interface-name"); value.Exists() {
 		data.InterfaceName = types.StringValue(value.String())
 	}
@@ -128,7 +128,7 @@ func (data *WirelessManagementInterfaceData) fromBodyXML(ctx context.Context, re
 
 // Section below is generated&owned by "gen/generator.go". //template:begin addDeletedItemsXML
 
-func (data *WirelessManagementInterface) addDeletedItemsXML(ctx context.Context, state WirelessManagementInterface, body string) string {
+func (data *WirelessSystem) addDeletedItemsXML(ctx context.Context, state WirelessSystem, body string) string {
 	b := netconf.NewBody(body)
 	if !state.InterfaceName.IsNull() && data.InterfaceName.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/interface-name")
@@ -142,7 +142,7 @@ func (data *WirelessManagementInterface) addDeletedItemsXML(ctx context.Context,
 
 // Section below is generated&owned by "gen/generator.go". //template:begin addDeletePathsXML
 
-func (data *WirelessManagementInterface) addDeletePathsXML(ctx context.Context, body string) string {
+func (data *WirelessSystem) addDeletePathsXML(ctx context.Context, body string) string {
 	b := netconf.NewBody(body)
 	if !data.InterfaceName.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/interface-name")

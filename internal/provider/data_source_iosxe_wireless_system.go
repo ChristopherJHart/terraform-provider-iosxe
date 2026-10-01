@@ -38,26 +38,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &WirelessManagementInterfaceDataSource{}
-	_ datasource.DataSourceWithConfigure = &WirelessManagementInterfaceDataSource{}
+	_ datasource.DataSource              = &WirelessSystemDataSource{}
+	_ datasource.DataSourceWithConfigure = &WirelessSystemDataSource{}
 )
 
-func NewWirelessManagementInterfaceDataSource() datasource.DataSource {
-	return &WirelessManagementInterfaceDataSource{}
+func NewWirelessSystemDataSource() datasource.DataSource {
+	return &WirelessSystemDataSource{}
 }
 
-type WirelessManagementInterfaceDataSource struct {
+type WirelessSystemDataSource struct {
 	data *IosxeProviderData
 }
 
-func (d *WirelessManagementInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_wireless_management_interface"
+func (d *WirelessSystemDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_wireless_system"
 }
 
-func (d *WirelessManagementInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *WirelessSystemDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Wireless Management Interface configuration.",
+		MarkdownDescription: "This data source can read the Wireless System configuration.",
 
 		Attributes: map[string]schema.Attribute{
 			"device": schema.StringAttribute{
@@ -76,7 +76,7 @@ func (d *WirelessManagementInterfaceDataSource) Schema(ctx context.Context, req 
 	}
 }
 
-func (d *WirelessManagementInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *WirelessSystemDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -88,8 +88,8 @@ func (d *WirelessManagementInterfaceDataSource) Configure(_ context.Context, req
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *WirelessManagementInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config WirelessManagementInterfaceData
+func (d *WirelessSystemDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config WirelessSystemData
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

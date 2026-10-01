@@ -44,26 +44,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &WirelessManagementInterfaceResource{}
-	_ resource.ResourceWithImportState = &WirelessManagementInterfaceResource{}
+	_ resource.Resource                = &WirelessSystemResource{}
+	_ resource.ResourceWithImportState = &WirelessSystemResource{}
 )
 
-func NewWirelessManagementInterfaceResource() resource.Resource {
-	return &WirelessManagementInterfaceResource{}
+func NewWirelessSystemResource() resource.Resource {
+	return &WirelessSystemResource{}
 }
 
-type WirelessManagementInterfaceResource struct {
+type WirelessSystemResource struct {
 	data *IosxeProviderData
 }
 
-func (r *WirelessManagementInterfaceResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_wireless_management_interface"
+func (r *WirelessSystemResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_wireless_system"
 }
 
-func (r *WirelessManagementInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *WirelessSystemResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This resource can manage the Wireless Management Interface configuration.",
+		MarkdownDescription: "This resource can manage the Wireless System configuration.",
 
 		Attributes: map[string]schema.Attribute{
 			"device": schema.StringAttribute{
@@ -92,7 +92,7 @@ func (r *WirelessManagementInterfaceResource) Schema(ctx context.Context, req re
 	}
 }
 
-func (r *WirelessManagementInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *WirelessSystemResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -104,8 +104,8 @@ func (r *WirelessManagementInterfaceResource) Configure(_ context.Context, req r
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *WirelessManagementInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan, config WirelessManagementInterface
+func (r *WirelessSystemResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan, config WirelessSystem
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -159,8 +159,8 @@ func (r *WirelessManagementInterfaceResource) Create(ctx context.Context, req re
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *WirelessManagementInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state WirelessManagementInterface
+func (r *WirelessSystemResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state WirelessSystem
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -223,8 +223,8 @@ func (r *WirelessManagementInterfaceResource) Read(ctx context.Context, req reso
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *WirelessManagementInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state, config WirelessManagementInterface
+func (r *WirelessSystemResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state, config WirelessSystem
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -282,8 +282,8 @@ func (r *WirelessManagementInterfaceResource) Update(ctx context.Context, req re
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *WirelessManagementInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state WirelessManagementInterface
+func (r *WirelessSystemResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state WirelessSystem
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -342,7 +342,7 @@ func (r *WirelessManagementInterfaceResource) Delete(ctx context.Context, req re
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *WirelessManagementInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *WirelessSystemResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 	idParts = helpers.RemoveEmptyStrings(idParts)
 
@@ -360,7 +360,7 @@ func (r *WirelessManagementInterfaceResource) ImportState(ctx context.Context, r
 	}
 
 	// construct path for 'id' attribute
-	var state WirelessManagementInterface
+	var state WirelessSystem
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), state.getPath())...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
